@@ -23,6 +23,9 @@ public class DialogPage {
     @FindBy(xpath = "//div[@class='im_editable im-chat-input--text _im_text']")
     public WebElement messageInput;
 
+    @FindBy(xpath = "//a[@class='im-page--title-main-inner _im_page_peer_name']")
+    public WebElement name;
+
     public WebElement lastMessage(){
        return allMessages.get(allMessages.size()-1);
     }

@@ -11,6 +11,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
 public class ReadMessagesTests extends TestBase {
 
     @BeforeClass
@@ -22,15 +27,14 @@ public class ReadMessagesTests extends TestBase {
     public void BeforeMethod(){
         initDrivers("Chrome");
         initPages();
+        data.wroteStarWars = new ArrayList<>();
     }
 
     @Test
-    public void readMessages() throws InterruptedException {
+    public void readMessages() throws InterruptedException, IOException {
 
         authorization(user.getLogin(),user.getPassword());
-
         Thread.sleep(2000);
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='submit_post_box']")));
         goTo(data.vkMessagesUnread);
 
@@ -40,13 +44,10 @@ public class ReadMessagesTests extends TestBase {
                 new WebDriverWait(driver, 2)
                         .until(ExpectedConditions.visibilityOf(dialogPage.toEnd)).click();
                         Thread.sleep(1500);
-            }catch (TimeoutException ex){
-
-            }
+            }catch (TimeoutException ex){ }
 
             for (String del : data.dela) {
                 if (dialogPage.lastMessage().getText().toLowerCase().contains(del)) {
-                    quest++;
                     sendTextTo(dialogPage.messageInput,"normalno");
                     break;
                 }
@@ -58,18 +59,21 @@ public class ReadMessagesTests extends TestBase {
                         .getAttribute("style")
                         .contains(".jpg")){
 
-                    img++;
                     sendTextTo(dialogPage.messageInput,"lol");
                 }
             }
+
+            if(dialogPage.lastMessage().getText().contains("star wars")){
+                data.wroteStarWars.add(dialogPage.name.getText());
+            }
             goTo(data.vkMessagesUnread);
         }
+        writeText(data.wroteStarWars);
         Assert.assertFalse(isElementPresent(messagesPage.unreadedMessages));
     }
 
     //@AfterTest
     public void tearDown(){
-        System.out.println(quest + " человека спросили как у тебя дела, " + img + " отправили картинку" );
         driver.close();
     }
 

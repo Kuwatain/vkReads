@@ -15,4 +15,10 @@ public class MessagesPage {
 
     @FindBy(xpath = "//li[contains(@class, 'nim-dialog_unread')]")
     public WebElement unreadedMessages;
+
+    @FindBy(xpath = "//span[@class='nim-dialog--preview _dialog_body']")
+    public WebElement previewDialogText;
+
+    @FindBy(xpath = "//input[@id='im_dialogs_search']")
+    public WebElement searchInput;
 }
