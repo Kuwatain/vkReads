@@ -2,7 +2,6 @@ package vkReads;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -11,9 +10,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class ReadMessagesTests extends TestBase {
@@ -25,7 +22,7 @@ public class ReadMessagesTests extends TestBase {
 
     @BeforeMethod
     public void BeforeMethod(){
-        initDrivers("Chrome");
+        initDrivers();
         initPages();
         data.wroteStarWars = new ArrayList<>();
     }
@@ -34,7 +31,6 @@ public class ReadMessagesTests extends TestBase {
     public void readMessages() throws InterruptedException, IOException {
 
         authorization(user.getLogin(),user.getPassword());
-        Thread.sleep(2000);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='submit_post_box']")));
         goTo(data.vkMessagesUnread);
 
@@ -72,7 +68,7 @@ public class ReadMessagesTests extends TestBase {
         Assert.assertFalse(isElementPresent(messagesPage.unreadedMessages));
     }
 
-    //@AfterTest
+    @AfterTest
     public void tearDown(){
         driver.close();
     }
