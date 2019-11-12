@@ -5,7 +5,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeClass;
 import vkReads.Models.*;
 import vkReads.Pages.AuthPage;
 import vkReads.Pages.BasePage;
@@ -22,14 +22,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 
 public class TestBase {
-
-    //Check
 
     protected WebDriver driver;
     WebDriverWait wait;
@@ -54,17 +51,19 @@ public class TestBase {
     MessagesPage messagesPage;
     DialogPage dialogPage;
 
-    @BeforeSuite
-    public void init(){
+    @BeforeClass
+    public void init() throws IOException {
         System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver.exe");
         driver = new ChromeDriver();
+        wait = new WebDriverWait(driver, 10);
+
+        data.wroteStarWars = new ArrayList<>();
+        data.wroteStarWars = reader();
+
+        initPages();
     }
 
-    void initDrivers() {
-        driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-        wait = new WebDriverWait(driver, 10);
-    }
-    void initPages() {
+    private void initPages() {
         authPage = new AuthPage(driver);
         messagesPage = new MessagesPage(driver);
         dialogPage = new DialogPage(driver);
@@ -156,14 +155,14 @@ public class TestBase {
         return  gson.fromJson(reader,User.class);
     }
 
-    void writeText(List<String> list) throws IOException {
-        Path file = Paths.get("starWars.txt");
-        Files.write(file, list, StandardCharsets.UTF_8);
-    }
-    static List<String> reader() throws IOException {
+    private static List<String> reader() throws IOException {
         List<String> lines;
         lines = Files.readAllLines(Paths.get("C:\\Users\\jopad\\IdeaProjects\\untitled\\starWars.txt"), StandardCharsets.UTF_8);
         return lines;
+    }
+    void writeText(List<String> list) throws IOException {
+        Path file = Paths.get("starWars.txt");
+        Files.write(file, list, StandardCharsets.UTF_8);
     }
 
     void sendTextTo(WebElement element, String text) {

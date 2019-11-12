@@ -3,24 +3,18 @@ package vkReads;
 import io.restassured.RestAssured;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.By;
+
+import org.testng.annotations.Test;
+
 import vkReads.Models.*;
 
 import java.util.InputMismatchException;
 import java.net.URISyntaxException;
-import java.io.IOException;
+
 
 public class StarWarsApi extends TestBase{
-
-    @BeforeMethod
-    public void BeforeMethod() throws IOException {
-        initDrivers();
-        initPages();
-        data.wroteStarWars = reader();
-    }
 
     @Test
     public void starWarsBot() throws InterruptedException {
